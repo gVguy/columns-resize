@@ -1,6 +1,6 @@
 # columns-resize
 
-A tiny simple dependency-free library to help you create flex-based table-like layouts, which can be resized by user
+A tiny simple dependency-free library to create flex-based table-like layouts, which can be resized by user
 
 <img src="https://i.imgur.com/QfyUfun.gif" width="400">
 
