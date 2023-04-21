@@ -2,9 +2,17 @@
   "name": "columns-resize",
   "description": "A tiny simple dependency-free library to help you create flex-based table-like layouts, which can be resized by user",
   "keywords": ["columns", "resize", "flex"],
+  "author": "Ivan Che",
   "version": "0.0.1",
   "type": "module",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gVguy/columns-resize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gVguy/columns-resize/issues"
+  },
   "main": "dist/columns-resize.js",
   "browser": "dist/columns-resize.js",
   "module": "dist/columns-resize.js",
