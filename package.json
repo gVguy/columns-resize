@@ -1,0 +1,29 @@
+{
+  "name": "columns-resize",
+  "description": "A tiny simple dependency-free library to help you create flex-based table-like layouts, which can be resized by user",
+  "keywords": ["columns", "resize", "flex"],
+  "version": "0.0.1",
+  "type": "module",
+  "license": "ISC",
+  "main": "dist/columns-resize.js",
+  "browser": "dist/columns-resize.js",
+  "module": "dist/columns-resize.js",
+  "unpkg": "dist/nice-waves.min.js",
+  "files": ["dist"],
+  "scripts": {
+    "dev": "vite",
+    "build:demo": "tsc && vite build --outDir dist-demo",
+    "build": "rollup -c",
+    "publish:demo": "gh-pages -d dist-demo",
+    "prepublish:demo": "npm run build:demo"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.1",
+    "gh-pages": "^5.0.0",
+    "rollup": "^3.20.7",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.0"
+  }
+}

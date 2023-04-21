@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>columns-resize demo</title>
+  </head>
+  <body>
+    <div id="app">
+
+      <div id="wrapper">
+
+        <!-- 
+            row is the container of columns.
+            each row must have display:flex
+        -->
+        <div class="header row">
+          <!--
+            data-column-id must provide an id unique for each column
+          -->
+          <div class="column" data-column-id="name">
+            Name
+          </div>
+          <div class="column" data-column-id="faculty">
+            House
+          </div>
+          <div class="column" data-column-id="long-number">
+            Points
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column" data-column-id="name">
+            Godric Gryffindor
+            <!--
+              data-resize-handle indicates the handlebar element,
+              that can be dragged to resize columns.
+              such element must be nested inside of the column element
+            -->
+            <div data-resize-handle></div>
+          </div>
+          
+          <div class="column" data-column-id="faculty">
+            Gryffindor
+            <div data-resize-handle></div>
+          </div>
+          
+          <div class="column" data-column-id="long-number">
+            9847362594654783295483726543782
+          </div>
+          
+        </div>
+
+        <div class="row">
+          <div class="column" data-column-id="name">
+            Rowena Ravenclaw
+            <div data-resize-handle></div>
+          </div>
+          <div class="column" data-column-id="faculty">
+            Ravenclaw
+            <div data-resize-handle></div>
+          </div>
+          <div class="column" data-column-id="long-number">
+            4239576492357848932875493275649
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column" data-column-id="name">
+            Helga Hufflepuff
+            <div data-resize-handle></div>
+          </div>
+          <div class="column" data-column-id="faculty">
+            Hufflepuff
+            <div data-resize-handle></div>
+          </div>
+          <div class="column" data-column-id="long-number">
+            498257493827594963254326549832
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column" data-column-id="name">
+            Salazar Slytherin
+            <div data-resize-handle></div>
+          </div>
+          <div class="column" data-column-id="faculty">
+            Slytherin
+            <div data-resize-handle></div>
+          </div>
+          <div class="column" data-column-id="long-number">
+            31746321743010594720314345
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/demo/index.ts"></script>
+  </body>
+</html>
