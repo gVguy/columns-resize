@@ -1,6 +1,6 @@
 {
   "name": "columns-resize",
-  "description": "A tiny simple dependency-free library to create flex-based table-like layouts, which can be resized by user",
+  "description": "A tiny dependency-free library to create flex-based table-like layouts, which can be resized by user",
   "keywords": ["columns", "resize", "flex"],
   "author": "Ivan Che",
   "version": "0.0.1",

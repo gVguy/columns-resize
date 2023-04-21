@@ -1,6 +1,6 @@
 # columns-resize
 
-A tiny simple dependency-free library to create flex-based table-like layouts, which can be resized by user
+A tiny dependency-free library to create flex-based table-like layouts, which can be resized by user
 <p align="center">
   🚀 <a href="https://gvguy.github.io/columns-resize/">Live demo</a> 🚀 
 </p>
