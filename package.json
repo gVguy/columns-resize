@@ -20,7 +20,7 @@
   "files": ["dist"],
   "scripts": {
     "dev": "vite",
-    "build:demo": "tsc && vite build --outDir dist-demo",
+    "build:demo": "tsc && vite build --outDir dist-demo --base ./",
     "build": "rollup -c",
     "publish:demo": "gh-pages -d dist-demo",
     "prepublish:demo": "npm run build:demo"
