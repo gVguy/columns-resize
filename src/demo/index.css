@@ -25,12 +25,12 @@ body {
   margin: 0;
   user-select: none;
 }
-.wrapper {
-  width: 400px;
+#wrapper {
+  width: 50vw;
   overflow: hidden;
 }
 .row {
-  padding: 10px;
+  padding: 10px 1vw;
   margin: 10px;
   background: white;
   border-radius: 6px;
@@ -41,7 +41,7 @@ body {
 .column {
   position: relative;
   padding: 0 5px;
-  flex: 1 1 33%;
+  flex: 1 1 fit-content;
 }
 .column:nth-child(2) {
   flex: 0 0 120px;

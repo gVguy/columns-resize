@@ -1,4 +1,4 @@
-import { Column } from './column'
+import { Column,  } from './column'
 
 export class Columns {
   columns: Column[] = []
@@ -18,7 +18,8 @@ export class Columns {
   private init() {
     const {
       minWidthByColumnId = {},
-      defaultMinWidth = 50
+      defaultMinWidth = 50,
+      sizeUnit = 'px'
     } = this.opts || {}
 
     this.columns = []
@@ -32,7 +33,8 @@ export class Columns {
       this.columns.push(new Column(
         allColumnElements.filter(el => el.dataset.columnId == id),
         this,
-        id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth
+        id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth,
+        sizeUnit
       ))
     })
   }
@@ -42,6 +44,7 @@ export class Columns {
       col.elements.forEach(el => {
         el.style.boxSizing = 'border-box'
         el.style.overflow = 'hidden'
+        el.style.minWidth = col.minWidth + 'px'
       })
       requestAnimationFrame(() => {
         col.getWidth()
@@ -78,6 +81,10 @@ export class Columns {
   }
 
   private onPointerDown = (e: PointerEvent) => {
+    this.columns.forEach(col => {
+      col.getWidth()
+      col.setWidthDiff(0)
+    })
     this.lastResizeEventX = e.clientX
     this.targetColumn = (e.target as HandleEl).targetColumn
     document.addEventListener('pointerup', this.onPointerUp, { once: true })
@@ -109,6 +116,9 @@ type ColumnsOpts = {
   minWidthByColumnId?: {
     [key: string]: number
   }
+  sizeUnit?: SizeUnit
 }
 
 type HandleEl = HTMLElement & { targetColumn: Column }
+
+export type SizeUnit = 'px'|'vw'
