@@ -18,8 +18,7 @@ export class Columns {
   private init() {
     const {
       minWidthByColumnId = {},
-      defaultMinWidth = 50,
-      sizeUnit = 'px'
+      defaultMinWidth = 50
     } = this.opts || {}
 
     this.columns = []
@@ -33,8 +32,7 @@ export class Columns {
       this.columns.push(new Column(
         allColumnElements.filter(el => el.dataset.columnId == id),
         this,
-        id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth,
-        sizeUnit
+        id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth
       ))
     })
   }
@@ -48,7 +46,7 @@ export class Columns {
       })
       requestAnimationFrame(() => {
         col.getWidth()
-        col.setWidthDiff(0)
+        col.setWidthDiff(0, true)
       })
     })
   }
@@ -91,11 +89,11 @@ export class Columns {
     document.addEventListener('pointermove', this.onPointerMove)
   }
   private onPointerUp = () => {
+    this.columns.forEach(col => col.setWidthDiff(0, true))
     document.removeEventListener('pointermove', this.onPointerMove)
   }
   private onPointerMove = (e: PointerEvent) => {
     const diff = e.clientX - this.lastResizeEventX
-    const diffAbs = Math.abs(diff)
     let shrinkingCol, growingCol
     if (diff < 0) {
       shrinkingCol = this.targetColumn?.selfOrPreviousShrinkable
@@ -105,6 +103,10 @@ export class Columns {
       growingCol = this.targetColumn
     }
     if (!shrinkingCol || !growingCol) return
+    const diffAbs = Math.min(
+      Math.abs(diff),
+      shrinkingCol.width - shrinkingCol.minWidth
+    )
     shrinkingCol.setWidthDiff(-diffAbs)
     growingCol.setWidthDiff(diffAbs)
     this.lastResizeEventX = e.clientX
@@ -116,9 +118,6 @@ type ColumnsOpts = {
   minWidthByColumnId?: {
     [key: string]: number
   }
-  sizeUnit?: SizeUnit
 }
 
 type HandleEl = HTMLElement & { targetColumn: Column }
-
-export type SizeUnit = 'px'|'vw'

@@ -1,25 +1,21 @@
-import type { Columns, SizeUnit } from './columns'
+import type { Columns } from './columns'
 
 export class Column {
   elements: HTMLElement[]
   minWidth: number
-  private sizeUnit: SizeUnit
-  private idx: number
-  private columns: Columns
-  private clientWidth: number = 0
-  private unitWidth: number = 0
+  width: number = 0
+  idx: number
+  columns: Columns
   
   constructor(
     elements: HTMLElement[],
     columns: Columns,
-    minWidth = 50,
-    sizeUnit: SizeUnit
+    minWidth = 50
   ) {
     this.elements = elements
     this.columns = columns
     this.idx = columns.columns.length
     this.minWidth = minWidth
-    this.sizeUnit = sizeUnit
     this.getWidth()
   }
 
@@ -30,7 +26,7 @@ export class Column {
     return this.columns.columns[this.idx - 1]
   }
   get canShrink() {
-    return this.clientWidth > this.minWidth
+    return this.width > this.minWidth
   }
   get nextShrinkable() {
     let col: Column = this.next
@@ -55,27 +51,15 @@ export class Column {
     const avgClientWidth = this.elements[0].clientWidth
       // .map(el => el.clientWidth)
       // .reduce((a, b) => a + b, 0) / this.elements.length
-    this.clientWidth = avgClientWidth
-    if (this.sizeUnit == 'vw') {
-      this.unitWidth = toVw(avgClientWidth)
-    } else {
-      this.unitWidth = avgClientWidth
-    }
+    this.width = avgClientWidth
   }
-  setWidthDiff(diff: number) {
-    this.clientWidth += diff
-    if (this.sizeUnit == 'vw') {
-      this.unitWidth = toVw(this.clientWidth)
-    } else {
-      this.unitWidth = this.clientWidth
-    }
-    const shrink = this.canShrink ? '1' : '0'
-    const grow = '1'
-    const basis = `${this.unitWidth}${this.sizeUnit}`
+  setWidthDiff(diff: number, allowGrow = false) {
+    this.width += diff
+    const shrink = allowGrow ? (this.canShrink ? '1' : '0') : '0'
+    const grow = allowGrow ? '1' : '0'
+    const basis = `${this.width}px`
     this.elements.forEach(el => {
       el.style.flex = `${grow} ${shrink} ${basis}`
     })
   }
 }
-
-const toVw = (n: number) => 100 * n / window.innerWidth
