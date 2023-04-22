@@ -25,8 +25,8 @@ body {
   margin: 0;
   user-select: none;
 }
-.wrapper {
-  width: 400px;
+#wrapper {
+  width: 50vw;
   overflow: hidden;
 }
 .row {
@@ -41,7 +41,7 @@ body {
 .column {
   position: relative;
   padding: 0 5px;
-  flex: 1 1 33%;
+  flex: 1 1 fit-content;
 }
 .column:nth-child(2) {
   flex: 0 0 120px;

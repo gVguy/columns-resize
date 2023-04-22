@@ -1,4 +1,4 @@
-import { Column } from './column'
+import { Column,  } from './column'
 
 export class Columns {
   columns: Column[] = []
@@ -42,10 +42,11 @@ export class Columns {
       col.elements.forEach(el => {
         el.style.boxSizing = 'border-box'
         el.style.overflow = 'hidden'
+        el.style.minWidth = col.minWidth + 'px'
       })
       requestAnimationFrame(() => {
         col.getWidth()
-        col.setWidthDiff(0)
+        col.setWidthDiff(0, true)
       })
     })
   }
@@ -78,17 +79,21 @@ export class Columns {
   }
 
   private onPointerDown = (e: PointerEvent) => {
+    this.columns.forEach(col => {
+      col.getWidth()
+      col.setWidthDiff(0)
+    })
     this.lastResizeEventX = e.clientX
     this.targetColumn = (e.target as HandleEl).targetColumn
     document.addEventListener('pointerup', this.onPointerUp, { once: true })
     document.addEventListener('pointermove', this.onPointerMove)
   }
   private onPointerUp = () => {
+    this.columns.forEach(col => col.setWidthDiff(0, true))
     document.removeEventListener('pointermove', this.onPointerMove)
   }
   private onPointerMove = (e: PointerEvent) => {
     const diff = e.clientX - this.lastResizeEventX
-    const diffAbs = Math.abs(diff)
     let shrinkingCol, growingCol
     if (diff < 0) {
       shrinkingCol = this.targetColumn?.selfOrPreviousShrinkable
@@ -98,6 +103,10 @@ export class Columns {
       growingCol = this.targetColumn
     }
     if (!shrinkingCol || !growingCol) return
+    const diffAbs = Math.min(
+      Math.abs(diff),
+      shrinkingCol.width - shrinkingCol.minWidth
+    )
     shrinkingCol.setWidthDiff(-diffAbs)
     growingCol.setWidthDiff(diffAbs)
     this.lastResizeEventX = e.clientX

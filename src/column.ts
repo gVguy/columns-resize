@@ -2,10 +2,10 @@ import type { Columns } from './columns'
 
 export class Column {
   elements: HTMLElement[]
-  private idx: number
-  private columns: Columns
-  private minWidth: number = 0
-  private width: number = 0
+  minWidth: number
+  width: number = 0
+  idx: number
+  columns: Columns
   
   constructor(
     elements: HTMLElement[],
@@ -44,13 +44,21 @@ export class Column {
     }
     return col
   }
-  getWidth() {
-    this.width = this.elements[0].clientWidth
+  get isLast() {
+    return this.idx == this.columns.columns.length - 1
   }
-  setWidthDiff(diff: number) {
+  getWidth() {
+    const allClientWidths = this.elements.map(el => el.clientWidth)
+    const maxColWidth = Math.max(...allClientWidths)
+    this.width = maxColWidth
+  }
+  setWidthDiff(diff: number, allowGrow = false) {
     this.width += diff
+    const shrink = allowGrow ? (this.canShrink ? '1' : '0') : '0'
+    const grow = allowGrow ? '1' : '0'
+    const basis = `${this.width}px`
     this.elements.forEach(el => {
-      el.style.flex = `0 0 ${this.width}px`
+      el.style.flex = `${grow} ${shrink} ${basis}`
     })
   }
 }
