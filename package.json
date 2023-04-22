@@ -20,7 +20,7 @@
   "main": "dist/columns-resize.js",
   "browser": "dist/columns-resize.js",
   "module": "dist/columns-resize.js",
-  "unpkg": "dist/nice-waves.min.js",
+  "unpkg": "dist/columns-resize.min.js",
   "files": [
     "dist"
   ],
