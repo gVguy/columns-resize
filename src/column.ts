@@ -48,10 +48,9 @@ export class Column {
     return this.idx == this.columns.columns.length - 1
   }
   getWidth() {
-    const avgClientWidth = this.elements[0].clientWidth
-      // .map(el => el.clientWidth)
-      // .reduce((a, b) => a + b, 0) / this.elements.length
-    this.width = avgClientWidth
+    const allClientWidths = this.elements.map(el => el.clientWidth)
+    const maxColWidth = Math.max(...allClientWidths)
+    this.width = maxColWidth
   }
   setWidthDiff(diff: number, allowGrow = false) {
     this.width += diff
