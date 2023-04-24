@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>columns-resize demo</title>
-    <script type="module" crossorigin src="./assets/index-754e0752.js"></script>
-    <link rel="stylesheet" href="./assets/index-e4069f05.css">
+    <script type="module" crossorigin src="./assets/index-e3f80ba4.js"></script>
+    <link rel="stylesheet" href="./assets/index-6d3c880f.css">
   </head>
   <body>
     <div id="app">
 
-      <div id="wrapper">
+      <div id="wrapper" class="colors">
 
         <!-- 
             row is the container of columns.
@@ -21,21 +21,36 @@
             data-column-id must provide an id unique for each column
           -->
           <div class="column" data-column-id="name">
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
             Name
           </div>
           <div class="column" data-column-id="faculty">
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
             House
           </div>
           <div class="column" data-column-id="colors">
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
             Colors
           </div>
           <div class="column" data-column-id="long-number">
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
             Points
           </div>
         </div>
 
         <div class="row">
           <div class="column" data-column-id="name">
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
             Godric Gryffindor
             <!--
               data-resize-handle indicates the handlebar element,
@@ -46,72 +61,144 @@
           </div>
           
           <div class="column" data-column-id="faculty">
-            Gryffindor
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Gryffindor</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="colors">
-            Red, Gold
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Red, Gold</span>
             <div data-resize-handle></div>
           </div>
           
           <div class="column" data-column-id="long-number">
-            98
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>9831542356242541543254325432</span>
           </div>
           
         </div>
 
         <div class="row">
           <div class="column" data-column-id="name">
-            Rowena Ravenclaw
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Rowena Ravenclaw</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="faculty">
-            Ravenclaw
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Ravenclaw</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="colors">
-            Blue, Bronze
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Blue, Bronze</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="long-number">
-            42
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>4225432543254343254325</span>
           </div>
         </div>
 
         <div class="row">
           <div class="column" data-column-id="name">
-            Helga Hufflepuff
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Helga Hufflepuff</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="faculty">
-            Hufflepuff
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Hufflepuff</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="colors">
-            Black, Yellow
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Black, Yellow</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="long-number">
-            49
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>495436524525454325432</span>
           </div>
         </div>
 
         <div class="row">
           <div class="column" data-column-id="name">
-            Salazar Slytherin
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Salazar Slytherin</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="faculty">
-            Slytherin
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Slytherin</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="colors">
-            Green, Silver
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>Green, Silver</span>
             <div data-resize-handle></div>
           </div>
           <div class="column" data-column-id="long-number">
-            31
+            <div class="connected-indicator"></div>
+            <div class="active-indicator"></div>
+            <div class="direction-indicator"></div>
+            <span>312543254326554325432542</span>
           </div>
+        </div>
+
+      </div>
+
+      <div class="controls">
+        <button id="disconnect">Disconnect</button>
+        <button id="reconnect">Reconnect</button>
+        <button id="reset">Reset</button>
+      </div>
+      <div class="legend">
+        <div class="cbx-wrap">
+          <label>
+            <input type="checkbox" id="colors-cbx" checked>
+            Enable color coding
+          </label>
+        </div>
+        <div class="legend-line">
+          <div class="color connected"></div>Connected
+        </div>
+        <div class="legend-line">
+          <div class="color active"></div>Active
+        </div>
+        <div class="legend-line">
+          <div class="color growing"></div>Growing
+        </div>
+        <div class="legend-line">
+          <div class="color shrinking"></div>Shrinking
         </div>
       </div>
     </div>
