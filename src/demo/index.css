@@ -63,10 +63,13 @@ body {
   background: rgba(0,0,0,.2);
   cursor: not-allowed;
 }
-[data-resize-handle].columns-resize-connected:not(.columns-resize-active) {
+[data-resize-handle].columns-resize-connected {
+  background: black;
+}
+#wrapper.colors [data-resize-handle].columns-resize-connected {
   background: purple;
 }
-[data-resize-handle].columns-resize-active {
+#wrapper.colors [data-resize-handle].columns-resize-connected.columns-resize-active {
   background: linear-gradient(
     purple 0,
     purple 50%,
@@ -74,8 +77,16 @@ body {
     green 100%
   );
 }
-#wrapper.columns-resize-connected {
+#wrapper.colors.columns-resize-connected {
   background: purple;
+}
+#wrapper.colors.columns-resize-active {
+  background: linear-gradient(
+    purple 0,
+    purple 50%,
+    green calc(50% + 1px),
+    green 100%
+  );
 }
 .connected-indicator,
 .direction-indicator,
@@ -96,16 +107,16 @@ body {
 .active-indicator {
   top: 0;
 }
-.column.columns-resize-active .active-indicator {
+#wrapper.colors .column.columns-resize-active .active-indicator {
   background: rgba(0,255,0,.5);
 }
-.column.columns-resize-growing .direction-indicator {
+#wrapper.colors .column.columns-resize-growing .direction-indicator {
   background: rgba(0,0,255,.5);
 }
-.column.columns-resize-shrinking .direction-indicator {
+#wrapper.colors .column.columns-resize-shrinking .direction-indicator {
   background: rgba(255,0,0,.5);
 }
-.column.columns-resize-connected .connected-indicator {
+#wrapper.colors .column.columns-resize-connected .connected-indicator {
   background: rgba(128,0,128,.5);
 }
 .legend {
@@ -114,6 +125,9 @@ body {
   background: white;
   border-radius: 6px;
   padding: 10px;
+  flex-wrap: wrap;
+  width: 350px;
+  justify-content: center;
   /* flex-direction: column; */
 }
 .legend-line {
@@ -137,11 +151,7 @@ body {
 .legend-line .color.shrinking {
   background: red;
 }
-#wrapper.columns-resize-active {
-  background: linear-gradient(
-    purple 0,
-    purple 50%,
-    green calc(50% + 1px),
-    green 100%
-  );
+.legend .cbx-wrap {
+  width: 100%;
+  text-align: center;
 }

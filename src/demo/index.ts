@@ -20,3 +20,7 @@ document.getElementById('reconnect')!.onclick = () => {
 document.getElementById('reset')!.onclick = () => {
   columns.reset()
 }
+
+document.getElementById('colors-cbx')!.onchange = () => {
+  document.getElementById('wrapper')!.classList.toggle('colors')
+}
