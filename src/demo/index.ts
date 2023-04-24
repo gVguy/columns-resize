@@ -8,7 +8,15 @@ const columns = new Columns(
     minWidthByColumnId: {
       name: 50
     },
-    autoResizeHandles: true
+    autoResizeHandles: true,
+    onResizeStart() {
+      document.body.classList.add('grabbing')
+      console.log('resize start')
+    },
+    onResizeEnd() {
+      document.body.classList.remove('grabbing')
+      console.log('resize end')
+    }
   }
 )
 

@@ -112,6 +112,7 @@ export class Columns {
     document.addEventListener('pointermove', this.onPointerMove)
     this.rootElement.classList.add(ClassNames.ACTIVE)
     this.targetColumn.addHandlebarsClass(ClassNames.ACTIVE)
+    this.opts?.onResizeStart?.()
   }
   private onPointerUp = () => {
     this.columns.forEach(col => col.setWidthDiff(0, true))
@@ -119,6 +120,7 @@ export class Columns {
     this.rootElement.classList.remove(ClassNames.ACTIVE)
     this.targetColumn?.removeHandlebarsClass(ClassNames.ACTIVE)
     this.handleColumnsClasses(null, null)
+    this.opts?.onResizeEnd?.()
   }
   private onPointerMove = (e: PointerEvent) => {
     const diff = e.clientX - this.lastResizeEventX
@@ -168,6 +170,8 @@ type ColumnsOpts = {
     [key: string]: number
   }
   autoResizeHandles?: boolean
+  onResizeStart?: () => void
+  onResizeEnd?: () => void
 }
 
 type HandleEl = HTMLElement & { targetColumn: Column }

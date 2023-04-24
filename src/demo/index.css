@@ -16,6 +16,9 @@
 body {
   margin: 0;
 }
+body.grabbing * {
+  cursor: grabbing;
+}
 #app {
   background: grey;
   display: flex;
