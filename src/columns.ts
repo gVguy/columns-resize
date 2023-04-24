@@ -22,7 +22,8 @@ export class Columns {
   private init() {
     const {
       minWidthByColumnId = {},
-      defaultMinWidth = 50
+      defaultMinWidth = 50,
+      autoResizeHandles = false
     } = this.opts || {}
 
     this.columns = []
@@ -37,7 +38,8 @@ export class Columns {
         id,
         allColumnElements.filter(el => el.dataset.columnId == id),
         this,
-        id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth
+        id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth,
+        autoResizeHandles
       ))
     })
   }
@@ -165,6 +167,7 @@ type ColumnsOpts = {
   minWidthByColumnId?: {
     [key: string]: number
   }
+  autoResizeHandles?: boolean
 }
 
 type HandleEl = HTMLElement & { targetColumn: Column }

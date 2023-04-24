@@ -9,18 +9,21 @@ export class Column {
   columns: Columns
   handleElements: (HandleEl)[] = []
   id: string
+  autoResizeHandles: boolean
   
   constructor(
     id: string,
     elements: HTMLElement[],
     columns: Columns,
-    minWidth = 50
+    minWidth = 50,
+    autoResizeHandles: boolean
   ) {
     this.id = id
     this.elements = elements
     this.columns = columns
     this.idx = columns.columns.length
     this.minWidth = minWidth
+    this.autoResizeHandles = autoResizeHandles
     this.getWidth()
   }
 
@@ -67,8 +70,28 @@ export class Column {
     })
   }
 
+  createHandlebars() {
+    if (this.idx == this.columns.columns.length - 1) return
+    this.elements.forEach(el => {
+      if (el.closest('[data-no-auto-resize-handles]')) return
+      const handleEl = document.createElement('div') as unknown as HandleEl
+      handleEl.targetColumn = this
+      handleEl.setAttribute('data-resize-handle', '')
+      if (getComputedStyle(el).position == 'static') {
+        el.style.position = 'relative'
+      }
+      handleEl.style.position = 'absolute'
+      handleEl.style.top = '0'
+      handleEl.style.right = '0'
+      handleEl.style.height = '100%'
+      el.append(handleEl)
+    })
+  }
   connectHandlebars() {
     this.handleElements = []
+    if (this.autoResizeHandles) {
+      this.createHandlebars() 
+    }
     this.elements.forEach(el => {
       const handleEl = el.querySelector<HandleEl>('[data-resize-handle]')
       if (!handleEl) return

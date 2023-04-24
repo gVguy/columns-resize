@@ -7,7 +7,8 @@ const columns = new Columns(
     defaultMinWidth: 70,
     minWidthByColumnId: {
       name: 40
-    }
+    },
+    autoResizeHandles: true
   }
 )
 
