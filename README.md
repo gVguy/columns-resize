@@ -23,9 +23,7 @@ import ColumnsResize from 'columns-resize'
 <script src="https://unpkg.com/columns-resize@latest"></script>
 ```
 
-## Usage
-
-### Structure
+## Structure
 
 The layout consists of **rows** (which must have `display:flex` style)
 
@@ -33,7 +31,7 @@ Rows contain **columns** that can be resized. When one column is resized, all co
 
 Columns contain some information and a **resize handle** that can be dragged to make adjustments to column size. Resize handles are optional: not all columns must have them, but if a resize handle is present, it *must be nested within a column*
 
-### Markup
+## Markup
 
 This library relies on use of data-attributes.
 
@@ -78,7 +76,7 @@ Here's a list of data attributes that are important for us:
 </div>
 ```
 
-### Initialization
+## Initialization
 
 You need to provide the root element to limit the scope of each column set. This is the element from which the querySelector's fire, searching for all the data-attributed elements.
 
@@ -90,7 +88,7 @@ const rootElement = document.getElementById('wrapper')
 const columns = new ColumnsResize(rootElement)
 ```
 
-### Options
+## Options
 
 Along with the root element you can provide an options object
 
@@ -99,11 +97,14 @@ const columns = new ColumnsResize(rootElement, {
   defaultMinWidth: 50,
   minWidthByColumnId: {
     'name': 100
-  }
+  },
+  autoResizeHandles: true,
+  onResizeStart: () => console.log('resize start'),
+  onResizeEnd: () => console.log('resize end')
 })
 ```
 
-#### options.defaultMinWidth
+### options.defaultMinWidth
 
 type: `number`
 
@@ -113,7 +114,7 @@ A min width for each column unless a different min width is specified by `minWid
 
 The column will not shrink past its min width. If the user keeps resizing in the direction of a column that has reached its minimal width, the next column will start to shrink until there's no shrinkable columns left.
 
-#### options.minWidthByColumnId
+### options.minWidthByColumnId
 
 type: `{ [key: string]: number }`
 
@@ -121,7 +122,7 @@ default: `{}`
 
 Min widths for specific columns
 
-#### options.autoResizeHandles
+### options.autoResizeHandles
 
 type: `boolean`
 
@@ -156,9 +157,25 @@ If you need to exclude some rows from automatic resize handle generation, use `d
 </div>
 ```
 
-### Methods
+### options.onResizeStart
 
-#### reconnect()
+type: `() => void`
+
+default: `undefined`
+
+Callback to be called when resize action is initiated
+
+### options.onResizeEnd
+
+type: `() => void`
+
+default: `undefined`
+
+Callback to be called when resize action has ended
+
+## Methods
+
+### reconnect()
 
 If the DOM tree is updated - for example, new rows are added, you need to reconnect the instance
 
@@ -166,7 +183,7 @@ If the DOM tree is updated - for example, new rows are added, you need to reconn
 columns.reconnect()
 ```
 
-#### disconnect()
+### disconnect()
 
 If for any reason at some point you need to disable the resizability of your layout
 
@@ -174,7 +191,7 @@ If for any reason at some point you need to disable the resizability of your lay
 columns.disconnect()
 ```
 
-#### reset()
+### reset()
 
 If at some point you need to reset column widths to their initial values
 
@@ -184,7 +201,7 @@ columns.reset()
 
 **Note** that initial widths are measured at the initialization of instance and are not affected by disconnect / reconnect *unless* new columns are added (or removed). In that case, initial widths get overwritten
 
-### Classes
+## Classes
 
 Conditional classes are applied to the key elements for styling purposes
 
@@ -199,9 +216,9 @@ Here's the list of classes and the elements they're applied to:
 | `columns-resize-growing` | Column currently growing | This column is active & its size is being increased |
 | `columns-resize-shrinking` | Column currently shrinking | This column is active & its size is being decreased |
 
-### Style Requirements & Recommendations
+## Style Requirements & Recommendations
 
-#### Rows
+### Rows
 
 Every row must be a flexbox
 
@@ -211,7 +228,7 @@ Every row must be a flexbox
 }
 ```
 
-#### Columns
+### Columns
 
 It is recommended for columns to have these two properties, however it depends on implementation
 
@@ -238,7 +255,7 @@ overflow: hidden;
 box-sizing: border-box;
 ```
 
-#### Resize Handles
+### Resize Handles
 
 Positioning and styling of the resize handles is up to you regardless of whether they're createdted automatically or marked up manually
 
@@ -271,5 +288,25 @@ You may find it useful to increase the size of the handle to make it more clicka
 }
 [data-resize-handle].columns-resize-active::after {
   background: red;
+}
+```
+
+### Cursor
+
+You may want to set cursor to `grabbing` (for example) on the entire page while the resize is in progress. This can be acheived by conditionally toggling a class on the body:
+
+```js
+new ColumnsResize(rootElement, {
+  onResizeStart() {
+    document.body.classList.add('grabbing')
+  },
+  onResizeEnd() {
+    document.body.classList.remove('grabbing')
+  }
+})
+```
+```css
+body.grabbing * {
+  cursor: grabbing;
 }
 ```
