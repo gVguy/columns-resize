@@ -5,7 +5,7 @@ A tiny dependency-free library to create flex-based table-like layouts, which ca
   🚀 <a href="https://gvguy.github.io/columns-resize/">Live demo</a> 🚀 
 </p>
 <p align="center">
-  <img src="https://i.imgur.com/QfyUfun.gif" width="400">
+  <img src="https://i.imgur.com/R79HQTt.gif" width="400">
 </p>
 This library can be used alongside any framework as well as vanilla Javascript
 
