@@ -21,6 +21,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 20px;
   height: 100vh;
   margin: 0;
   user-select: none;
@@ -28,6 +30,8 @@ body {
 #wrapper {
   width: 50vw;
   overflow: hidden;
+  border-radius: 6px;
+  position: relative;
 }
 .row {
   padding: 10px;
@@ -36,12 +40,13 @@ body {
   border-radius: 6px;
 }
 .header {
-  background: rgba(255, 255, 255, .5);
+  background: lightgrey;
 }
 .column {
   position: relative;
   padding: 0 5px;
   flex: 1 1 fit-content;
+  z-index: 1;
 }
 .column:nth-child(2) {
   flex: 0 0 120px;
@@ -53,5 +58,90 @@ body {
   height: 100%;
   width: 5px;
   cursor: col-resize;
+}
+[data-resize-handle]:not(.columns-resize-connected) {
+  background: rgba(0,0,0,.2);
+  cursor: not-allowed;
+}
+[data-resize-handle].columns-resize-connected:not(.columns-resize-active) {
+  background: purple;
+}
+[data-resize-handle].columns-resize-active {
+  background: linear-gradient(
+    purple 0,
+    purple 50%,
+    green calc(50% + 1px),
+    green 100%
+  );
+}
+#wrapper.columns-resize-connected {
+  background: purple;
+}
+.connected-indicator,
+.direction-indicator,
+.active-indicator {
+  position: absolute;
+  height: 33%;
+  width: 100%;
+  left: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+.connected-indicator {
+  top: 66%;
+}
+.direction-indicator {
+  top: 33%;
+}
+.active-indicator {
+  top: 0;
+}
+.column.columns-resize-active .active-indicator {
+  background: rgba(0,255,0,.5);
+}
+.column.columns-resize-growing .direction-indicator {
+  background: rgba(0,0,255,.5);
+}
+.column.columns-resize-shrinking .direction-indicator {
+  background: rgba(255,0,0,.5);
+}
+.column.columns-resize-connected .connected-indicator {
+  background: rgba(128,0,128,.5);
+}
+.legend {
+  display: flex;
+  gap: 10px;
+  background: white;
+  border-radius: 6px;
+  padding: 10px;
+  /* flex-direction: column; */
+}
+.legend-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend-line .color {
+  width: 15px;
+  height: 15px;
+}
+.legend-line .color.active {
+  background: green;
+}
+.legend-line .color.connected {
+  background: purple;
+}
+.legend-line .color.growing {
+  background: blue;
+}
+.legend-line .color.shrinking {
   background: red;
+}
+#wrapper.columns-resize-active {
+  background: linear-gradient(
+    purple 0,
+    purple 50%,
+    green calc(50% + 1px),
+    green 100%
+  );
 }

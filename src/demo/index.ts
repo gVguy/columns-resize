@@ -1,7 +1,7 @@
 import Columns from '../main'
 import './index.css'
 
-new Columns(
+const columns = new Columns(
   document.querySelector('#wrapper')!,
   {
     defaultMinWidth: 70,
@@ -10,3 +10,13 @@ new Columns(
     }
   }
 )
+
+document.getElementById('disconnect')!.onclick = () => {
+  columns.disconnect()
+}
+document.getElementById('reconnect')!.onclick = () => {
+  columns.reconnect()
+}
+document.getElementById('reset')!.onclick = () => {
+  columns.reset()
+}

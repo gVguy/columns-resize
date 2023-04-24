@@ -1,4 +1,5 @@
 import type { Columns } from './columns'
+import * as ClassNames from './class-names'
 
 export class Column {
   elements: HTMLElement[]
@@ -6,12 +7,16 @@ export class Column {
   width: number = 0
   idx: number
   columns: Columns
+  handleElements: (HandleEl)[] = []
+  id: string
   
   constructor(
+    id: string,
     elements: HTMLElement[],
     columns: Columns,
     minWidth = 50
   ) {
+    this.id = id
     this.elements = elements
     this.columns = columns
     this.idx = columns.columns.length
@@ -61,4 +66,49 @@ export class Column {
       el.style.flex = `${grow} ${shrink} ${basis}`
     })
   }
+
+  connectHandlebars() {
+    this.handleElements = []
+    this.elements.forEach(el => {
+      const handleEl = el.querySelector<HandleEl>('[data-resize-handle]')
+      if (!handleEl) return
+      handleEl.targetColumn = this
+      this.handleElements.push(handleEl)
+    })
+    this.handleElements.forEach(handleEl => {
+      handleEl.addEventListener('pointerdown', this.columns.onPointerDown)
+    })
+    this.addElementsClass(ClassNames.CONNECTED)
+    this.addHandlebarsClass(ClassNames.CONNECTED)
+  }
+  disconnectHandlebars() {
+    this.handleElements.forEach(handleEl => {
+      handleEl.removeEventListener('pointerdown', this.columns.onPointerDown)
+    })
+    this.removeElementsClass(ClassNames.CONNECTED)
+    this.removeHandlebarsClass(ClassNames.CONNECTED)
+  }
+
+  addElementsClass(className: string) {
+    this.elements.forEach(el => {
+      el.classList.add(className)
+    })
+  }
+  removeElementsClass(className: string) {
+    this.elements.forEach(el => {
+      el.classList.remove(className)
+    })
+  }
+  addHandlebarsClass(className: string) {
+    this.handleElements.forEach(el => {
+      el.classList.add(className)
+    })
+  }
+  removeHandlebarsClass(className: string) {
+    this.handleElements.forEach(el => {
+      el.classList.remove(className)
+    })
+  }
 }
+
+type HandleEl = HTMLElement & { targetColumn: Column }
