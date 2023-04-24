@@ -74,16 +74,10 @@ export class Column {
     if (this.idx == this.columns.columns.length - 1) return
     this.elements.forEach(el => {
       if (el.closest('[data-no-auto-resize-handles]')) return
+      if (el.querySelector('[data-resize-handle]')) return
       const handleEl = document.createElement('div') as unknown as HandleEl
       handleEl.targetColumn = this
       handleEl.setAttribute('data-resize-handle', '')
-      if (getComputedStyle(el).position == 'static') {
-        el.style.position = 'relative'
-      }
-      handleEl.style.position = 'absolute'
-      handleEl.style.top = '0'
-      handleEl.style.right = '0'
-      handleEl.style.height = '100%'
       el.append(handleEl)
     })
   }

@@ -37,10 +37,11 @@ Columns contain some information and a **resize handle** that can be dragged to 
 
 This library relies on use of data-attributes.
 
-There are two kinds of data attributes that are important for us:
+Here's a list of data attributes that are important for us:
 
 * `data-column-id="some-id"` - this attribute must be present on every column in your layout. The id must be unique *for each column*
-* `data-resize-handle` - this attribute indicates elements that are used as handle bars which can be dragged to resize columns
+* `data-resize-handle` - this attribute indicates elements that are used as handle bars which can be dragged to resize columns. Can be auto generated with [`autoResizeHandles` option](#optionsautoresizehandles)
+* `data-no-auto-resize-handles` - this optional data attribute can be used along with [`autoResizeHandles` option](#optionsautoresizehandles) to exclude rows from automatic handles generation
 
 ```html
 <!-- 
@@ -120,6 +121,43 @@ default: `{}`
 
 Min widths for specific columns
 
+#### options.autoResizeHandles
+
+type: `boolean`
+
+default: `false`
+
+Automatically create resize handles for every column (except the last one)
+
+**Note** that [positioning and styling](#resize-handles) of auto-generated handles is up to you (no styles are applied by default to the created elements)
+
+If you need to exclude some rows from automatic resize handle generation, use `data-no-auto-resize-handles` on that row
+
+Example:
+
+```html
+<div class="row" data-no-auto-resize-handles>
+  <!-- No resize handles in this row -->
+  <div class="column" data-column-id="name">John</div>
+  <div class="column" data-column-id="surname">Doe</div>
+  <div class="column" data-column-id="age">28</div>
+</div>
+<div class="row">
+  <div class="column" data-column-id="name">
+    Mary
+    <!-- Resize handle will be created here -->
+  </div>
+  <div class="column" data-column-id="surname">
+    Perry
+    <!-- And here -->
+  </div>
+  <div class="column" data-column-id="age">
+    27
+    <!-- But not here -->
+  </div>
+</div>
+```
+
 ### Methods
 
 #### reconnect()
@@ -133,8 +171,6 @@ columns.reconnect()
 #### disconnect()
 
 If for any reason at some point you need to disable the resizability of your layout
-
-###
 
 ```js
 columns.disconnect()
@@ -165,7 +201,9 @@ Here's the list of classes and the elements they're applied to:
 | `columns-resize-growing` | Column currently growing | This column is active & its size is being increased |
 | `columns-resize-shrinking` | Column currently shrinking | This column is active & its size is being decreased |
 
-### Styles
+### Style Requirements & Recommendations
+
+#### Rows
 
 Every row must be a flexbox
 
@@ -174,6 +212,8 @@ Every row must be a flexbox
   display: flex;
 }
 ```
+
+#### Columns
 
 It is recommended for columns to have these two properties, however it depends on implementation
 
@@ -184,7 +224,7 @@ It is recommended for columns to have these two properties, however it depends o
 }
 ```
 
-Feel free to set the initial sizes of the columns
+Feel free to set the initial sizes of the columns with flex property
 ```css
 .column {
   flex: 1 1 33%;
@@ -198,4 +238,40 @@ Feel free to set the initial sizes of the columns
 ```css
 overflow: hidden;
 box-sizing: border-box;
+```
+
+#### Resize Handles
+
+Positioning and styling of the resize handles is up to you regardless of whether they're createdted automatically or marked up manually
+
+It is recommended that each resize handle is positioned in the far-right part of the column, for example, like this:
+
+```css
+[data-resize-handle] {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  cursor: col-resize;
+}
+```
+
+You may find it useful to increase the size of the handle to make it more clickable, while keeping the line itself thinner for *aesthetics*. Then you'll need to get a bit tricky, but one possible solution is to style a line as an `::after` element, while keeping the wider `[data-resize-handle]` element transparent:
+```css
+[data-resize-handle] {
+  width: 10px;
+  display: flex;
+  justify-content: center;
+}
+[data-resize-handle]::after {
+  display: block;
+  content: '';
+  width: 2px;
+  height: 100%;
+  background: black;
+}
+[data-resize-handle].columns-resize-active::after {
+  background: red;
+}
 ```
