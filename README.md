@@ -120,7 +120,9 @@ default: `{}`
 
 Min widths for specific columns
 
-### Reconnect
+### Methods
+
+#### reconnect()
 
 If the DOM tree is updated - for example, new rows are added, you need to reconnect the instance
 
@@ -128,13 +130,40 @@ If the DOM tree is updated - for example, new rows are added, you need to reconn
 columns.reconnect()
 ```
 
-### Disconnect
+#### disconnect()
 
 If for any reason at some point you need to disable the resizability of your layout
+
+###
 
 ```js
 columns.disconnect()
 ```
+
+#### reset()
+
+If at some point you need to reset column widths to their initial values
+
+```js
+columns.reset()
+```
+
+**Note** that initial widths are measured at the initialization of instance and are not affected by disconnect / reconnect *unless* new columns are added (or removed). In that case, initial widths get overwritten
+
+### Classes
+
+Conditional classes are applied to the key elements for styling purposes
+
+See <a href="https://gvguy.github.io/columns-resize/">Live demo</a> (with color coding enabled) for better understanding of how the classes are applied
+
+Here's the list of classes and the elements they're applied to:
+
+| Class name | Element(s) | Meaning |
+|---|---|---|
+| `columns-resize-connected` | Root, all columns, all handlebars | Instance is connected, columns resizable |
+| `columns-resize-active` | Root, columns currently being resized, handlebar currently being dragged | Resize action is happening right now, and this element is taking active part in it. You can expect exactly 1 handlebar and 2 columns to be active at any moment during every resize |
+| `columns-resize-growing` | Column currently growing | This column is active & its size is being increased |
+| `columns-resize-shrinking` | Column currently shrinking | This column is active & its size is being decreased |
 
 ### Styles
 
