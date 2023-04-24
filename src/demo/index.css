@@ -51,6 +51,17 @@ body {
 .column:nth-child(2) {
   flex: 0 0 120px;
 }
+.column.pic {
+  flex: 0 0 20px;
+  padding: 0;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: lightgrey;
+  overflow: hidden;
+}
 [data-resize-handle] {
   position: absolute;
   right: 0;
