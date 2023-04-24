@@ -133,8 +133,6 @@ Automatically create resize handles for every column (except the last one)
 
 If you need to exclude some rows from automatic resize handle generation, use `data-no-auto-resize-handles` on that row
 
-Example:
-
 ```html
 <div class="row" data-no-auto-resize-handles>
   <!-- No resize handles in this row -->
