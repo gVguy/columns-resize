@@ -100,7 +100,8 @@ const columns = new ColumnsResize(rootElement, {
   },
   autoResizeHandles: true,
   onResizeStart: () => console.log('resize start'),
-  onResizeEnd: () => console.log('resize end')
+  onResizeEnd: () => console.log('resize end'),
+  logs: true
 })
 ```
 
@@ -172,6 +173,14 @@ type: `() => void`
 default: `undefined`
 
 Callback to be called when resize action has ended
+
+### options.logs
+
+type: `boolean`
+
+default: `false`
+
+Whether or not to print logs (could be useful for debugging)
 
 ## Methods
 
