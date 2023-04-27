@@ -10,18 +10,18 @@ export class Columns {
   private lastGrowingColumn?: Column|null
   private lastShrinkingColumn?: Column|null
   private initialWidths = new Map<string, number>()
-  private beforeDisconnectWidths = new Map<string, number>()
+  private lastWidths = new Map<string, number>()
   private isPointerDown = false
+  private initPromise: Promise<void>
+  private pendingCallbackIds = new Set<string>()
 
   constructor(rootElement: HTMLElement, opts?: ColumnsOpts) {
     this.rootElement = rootElement
     this.opts = opts
-    this.init()
-    this.prepare()
-    this.connect()
+    this.initPromise = this.init()
   }
 
-  private init() {
+  private async init() {
     const {
       minWidthByColumnId = {},
       defaultMinWidth = 50,
@@ -44,6 +44,18 @@ export class Columns {
         autoResizeHandles
       ))
     })
+
+    await this.prepare()
+    this.connect()
+  }
+
+  private addDedupedPendingCallback(id: string, cb: Function) {
+    if (this.pendingCallbackIds.has(id)) return
+    this.pendingCallbackIds.add(id)
+    return this.initPromise.then(() => {
+      cb()
+      this.pendingCallbackIds.delete(id)
+    })
   }
 
   private trackColumnsChange() {
@@ -53,6 +65,7 @@ export class Columns {
       !columnsKeys.every(key => this.initialWidths.has(key))
     )
   }
+
   private overwriteWidthsMap(map: Map<string, number>) {
     map.clear()
     this.columns.forEach(col => {
@@ -60,9 +73,9 @@ export class Columns {
     })
   }
 
-  private prepare() {
+  private async prepare() {
     const columnsChanged = this.trackColumnsChange()
-    Promise.all(
+    await Promise.all(
       this.columns.map(col => new Promise<void>(resolve => {
         col.elements.forEach(el => {
           el.style.boxSizing = 'border-box'
@@ -73,7 +86,7 @@ export class Columns {
           if (columnsChanged) {
             col.getWidth()
           } else {
-            col.width = this.beforeDisconnectWidths.get(col.id)!
+            col.width = this.lastWidths.get(col.id)!
           }
           col.setWidthDiff(0, true)
           resolve()
@@ -86,25 +99,27 @@ export class Columns {
     })
   }
 
-  connect() {
+  private connect() {
     this.columns.forEach(col => col.connectHandlebars())
     this.rootElement.classList.add(ClassNames.CONNECTED)
   }
 
   disconnect() {
-    if (this.isPointerDown) {
-      this.onPointerUp()
-    }
-    this.overwriteWidthsMap(this.beforeDisconnectWidths)
-    this.columns.forEach(col => col.disconnectHandlebars())
-    this.rootElement.classList.remove(ClassNames.CONNECTED)
+    return this.addDedupedPendingCallback('disconnect', () => {
+      if (this.isPointerDown) {
+        this.onPointerUp()
+      }
+      this.overwriteWidthsMap(this.lastWidths)
+      this.columns.forEach(col => col.disconnectHandlebars())
+      this.rootElement.classList.remove(ClassNames.CONNECTED)
+    })
   }
 
   reconnect() {
-    this.disconnect()
-    this.init()
-    this.prepare()
-    this.connect()
+    return this.addDedupedPendingCallback('reconnect', async () => {
+      await this.disconnect()
+      this.initPromise = this.init()
+    })
   }
 
   reset() {
@@ -128,6 +143,7 @@ export class Columns {
     this.targetColumn.addHandlebarsClass(ClassNames.ACTIVE)
     this.opts?.onResizeStart?.()
   }
+
   private onPointerUp = () => {
     this.isPointerDown = false
     this.columns.forEach(col => col.setWidthDiff(0, true))
@@ -137,6 +153,7 @@ export class Columns {
     this.handleColumnsClasses(null, null)
     this.opts?.onResizeEnd?.()
   }
+
   private onPointerMove = (e: PointerEvent) => {
     const diff = e.clientX - this.lastResizeEventX
     let shrinkingCol, growingCol
@@ -157,6 +174,7 @@ export class Columns {
     this.handleColumnsClasses(growingCol, shrinkingCol)
     this.lastResizeEventX = e.clientX
   }
+  
   private handleColumnsClasses(growingCol: Column|null, shrinkingCol: Column|null) {
     if (this.lastGrowingColumn != growingCol) {
       growingCol?.addElementsClass(ClassNames.ACTIVE)
