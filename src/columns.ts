@@ -10,6 +10,7 @@ export class Columns {
   private lastGrowingColumn?: Column|null
   private lastShrinkingColumn?: Column|null
   private initialWidths = new Map<string, number>()
+  private isPointerDown = false
 
   constructor(rootElement: HTMLElement, opts?: ColumnsOpts) {
     this.rootElement = rootElement
@@ -44,20 +45,22 @@ export class Columns {
     })
   }
 
-  private handleInitialWidths() {
+  private trackColumnsChange() {
     const columnsKeys = this.columns.map(col => col.id)
-    if (
+    return (
       this.initialWidths.size != columnsKeys.length ||
       !columnsKeys.every(key => this.initialWidths.has(key))
-    ) {
-      this.initialWidths.clear()
-      this.columns.forEach(col => {
-        this.initialWidths.set(col.id, col.width)
-      })
-    }
+    )
+  }
+  private overwriteInitialWidths() {
+    this.initialWidths.clear()
+    this.columns.forEach(col => {
+      this.initialWidths.set(col.id, col.width)
+    })
   }
 
   private prepare() {
+    const columnsChanged = this.trackColumnsChange()
     Promise.all(
       this.columns.map(col => new Promise<void>(resolve => {
         col.elements.forEach(el => {
@@ -65,14 +68,20 @@ export class Columns {
           el.style.overflow = 'hidden'
           el.style.minWidth = col.minWidth + 'px'
         })
-        requestAnimationFrame(() => {
-          col.getWidth()
-          col.setWidthDiff(0, true)
+        if (columnsChanged) {
+          requestAnimationFrame(() => {
+            col.getWidth()
+            col.setWidthDiff(0, true)
+            resolve()
+          })
+        } else {
           resolve()
-        })
+        }
       }))
     ).then(() => {
-      this.handleInitialWidths()
+      if (columnsChanged) {
+        this.overwriteInitialWidths()
+      }
     })
   }
 
@@ -82,7 +91,9 @@ export class Columns {
   }
 
   disconnect() {
-    this.onPointerUp()
+    if (this.isPointerDown) {
+      this.onPointerUp()
+    }
     this.columns.forEach(col => col.disconnectHandlebars())
     this.rootElement.classList.remove(ClassNames.CONNECTED)
   }
@@ -102,6 +113,7 @@ export class Columns {
   }
 
   onPointerDown = (e: PointerEvent) => {
+    this.isPointerDown = true
     this.columns.forEach(col => {
       col.getWidth()
       col.setWidthDiff(0)
@@ -115,6 +127,7 @@ export class Columns {
     this.opts?.onResizeStart?.()
   }
   private onPointerUp = () => {
+    this.isPointerDown = false
     this.columns.forEach(col => col.setWidthDiff(0, true))
     document.removeEventListener('pointermove', this.onPointerMove)
     this.rootElement.classList.remove(ClassNames.ACTIVE)
