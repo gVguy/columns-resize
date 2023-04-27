@@ -19,9 +19,11 @@ const columns = new Columns(
     onResizeEnd() {
       document.body.classList.remove('grabbing')
       console.log('resize end')
-    }
+    },
+    logs: true
   }
 )
+
 
 document.getElementById('disconnect')!.onclick = () => {
   columns.disconnect()

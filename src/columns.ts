@@ -12,16 +12,19 @@ export class Columns {
   private initialWidths = new Map<string, number>()
   private lastWidths = new Map<string, number>()
   private isPointerDown = false
-  private initPromise: Promise<void>
-  private pendingCallbackIds = new Set<string>()
+  private pendingCallbacks: [string, Function][] = []
+  private isInit = false
 
   constructor(rootElement: HTMLElement, opts?: ColumnsOpts) {
     this.rootElement = rootElement
     this.opts = opts
-    this.initPromise = this.init()
+    this.init()
   }
 
   private async init() {
+    this.logger?.log('init runs')
+    this.isInit = false
+
     const {
       minWidthByColumnId = {},
       defaultMinWidth = 50,
@@ -47,15 +50,33 @@ export class Columns {
 
     await this.prepare()
     this.connect()
+
+    this.isInit = true
+    this.logger?.log('init done')
+
+    this.callPendingCallbacks()
+  }
+
+  private async callPendingCallbacks() {
+    const pendingCallbacks = this.pendingCallbacks
+    if (!pendingCallbacks.length) return
+    this.pendingCallbacks = []
+    this.logger?.log('calling pending callbacks')
+    for (const [_id, cb] of pendingCallbacks) {
+      await cb()
+    }
   }
 
   private addDedupedPendingCallback(id: string, cb: Function) {
-    if (this.pendingCallbackIds.has(id)) return
-    this.pendingCallbackIds.add(id)
-    return this.initPromise.then(() => {
+    if (this.isInit) {
       cb()
-      this.pendingCallbackIds.delete(id)
-    })
+      return
+    }
+    this.pendingCallbacks = this.pendingCallbacks.filter(([pendingId]) => (
+      id !== pendingId
+    ))
+    this.pendingCallbacks.push([id, cb])
+    this.logger?.log('added pending callback "'+id+'" to run after init (deduped)', this.pendingCallbacks.map(([id]) => id))
   }
 
   private trackColumnsChange() {
@@ -105,20 +126,26 @@ export class Columns {
   }
 
   disconnect() {
-    return this.addDedupedPendingCallback('disconnect', () => {
+    this.logger?.log('disconnect called')
+    this.addDedupedPendingCallback('disconnect', () => {
+      this.logger?.log('disconnect runs')
       if (this.isPointerDown) {
         this.onPointerUp()
       }
       this.overwriteWidthsMap(this.lastWidths)
       this.columns.forEach(col => col.disconnectHandlebars())
       this.rootElement.classList.remove(ClassNames.CONNECTED)
+      this.logger?.log('disconnect done')
     })
   }
 
   reconnect() {
-    return this.addDedupedPendingCallback('reconnect', async () => {
-      await this.disconnect()
-      this.initPromise = this.init()
+    this.logger?.log('reconnect called')
+    this.addDedupedPendingCallback('reconnect', async () => {
+      this.logger?.log('reconnect runs')
+      this.disconnect()
+      await this.init()
+      this.logger?.log('reconnect done')
     })
   }
 
@@ -195,6 +222,11 @@ export class Columns {
     this.lastGrowingColumn = growingCol
     this.lastShrinkingColumn = shrinkingCol
   }
+
+  get logger() {
+    if (!this.opts?.logs) return
+    return console
+  }
 }
 
 type ColumnsOpts = {
@@ -205,6 +237,7 @@ type ColumnsOpts = {
   autoResizeHandles?: boolean
   onResizeStart?: () => void
   onResizeEnd?: () => void
+  logs?: boolean
 }
 
 type HandleEl = HTMLElement & { targetColumn: Column }
