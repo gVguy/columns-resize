@@ -175,3 +175,18 @@ body.grabbing * {
   width: 100%;
   text-align: center;
 }
+.attention {
+  animation: attention 1s infinite;
+  border: 1px transparent solid;
+}
+@keyframes attention {
+  from {
+    border-color: transparent;
+  }
+  50% {
+    border-color: red;
+  }
+  100% {
+    border-color: transparent;
+  }
+}

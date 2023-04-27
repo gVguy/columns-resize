@@ -10,6 +10,7 @@ export class Columns {
   private lastGrowingColumn?: Column|null
   private lastShrinkingColumn?: Column|null
   private initialWidths = new Map<string, number>()
+  private beforeDisconnectWidths = new Map<string, number>()
   private isPointerDown = false
 
   constructor(rootElement: HTMLElement, opts?: ColumnsOpts) {
@@ -52,10 +53,10 @@ export class Columns {
       !columnsKeys.every(key => this.initialWidths.has(key))
     )
   }
-  private overwriteInitialWidths() {
-    this.initialWidths.clear()
+  private overwriteWidthsMap(map: Map<string, number>) {
+    map.clear()
     this.columns.forEach(col => {
-      this.initialWidths.set(col.id, col.width)
+      map.set(col.id, col.width)
     })
   }
 
@@ -68,19 +69,19 @@ export class Columns {
           el.style.overflow = 'hidden'
           el.style.minWidth = col.minWidth + 'px'
         })
-        if (columnsChanged) {
-          requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (columnsChanged) {
             col.getWidth()
-            col.setWidthDiff(0, true)
-            resolve()
-          })
-        } else {
+          } else {
+            col.width = this.beforeDisconnectWidths.get(col.id)!
+          }
+          col.setWidthDiff(0, true)
           resolve()
-        }
+        })
       }))
     ).then(() => {
       if (columnsChanged) {
-        this.overwriteInitialWidths()
+        this.overwriteWidthsMap(this.initialWidths)
       }
     })
   }
@@ -94,6 +95,7 @@ export class Columns {
     if (this.isPointerDown) {
       this.onPointerUp()
     }
+    this.overwriteWidthsMap(this.beforeDisconnectWidths)
     this.columns.forEach(col => col.disconnectHandlebars())
     this.rootElement.classList.remove(ClassNames.CONNECTED)
   }
