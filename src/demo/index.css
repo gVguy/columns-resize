@@ -89,6 +89,9 @@ body.grabbing * {
 #wrapper.colors [data-resize-handle].columns-resize-connected {
   background: purple;
 }
+#wrapper.colors [data-resize-handle].columns-resize-hover {
+  background: pink;
+}
 #wrapper.colors [data-resize-handle].columns-resize-connected.columns-resize-active {
   background: linear-gradient(
     purple 0,

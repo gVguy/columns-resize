@@ -10,6 +10,7 @@ export class Column {
   handleElements: (HandleEl)[] = []
   id: string
   autoResizeHandles: boolean
+  isHover = false
   
   constructor(
     id: string,
@@ -93,6 +94,8 @@ export class Column {
     })
     this.handleElements.forEach(handleEl => {
       handleEl.addEventListener('pointerdown', this.columns.onPointerDown)
+      handleEl.addEventListener('pointerenter', this.onPointerEnter)
+      handleEl.addEventListener('pointerleave', this.onPointerLeave)
     })
     this.addElementsClass(ClassNames.CONNECTED)
     this.addHandlebarsClass(ClassNames.CONNECTED)
@@ -100,6 +103,8 @@ export class Column {
   disconnectHandlebars() {
     this.handleElements.forEach(handleEl => {
       handleEl.removeEventListener('pointerdown', this.columns.onPointerDown)
+      handleEl.removeEventListener('pointerenter', this.onPointerEnter)
+      handleEl.removeEventListener('pointerleave', this.onPointerLeave)
     })
     this.removeElementsClass(ClassNames.CONNECTED)
     this.removeHandlebarsClass(ClassNames.CONNECTED)
@@ -124,6 +129,13 @@ export class Column {
     this.handleElements.forEach(el => {
       el.classList.remove(className)
     })
+  }
+
+  onPointerEnter = () => {
+    this.addHandlebarsClass(ClassNames.HOVER)
+  }
+  onPointerLeave = () => {
+    this.removeHandlebarsClass(ClassNames.HOVER)
   }
 }
 
