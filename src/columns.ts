@@ -44,7 +44,6 @@ export class Columns {
     const allColumnIds = new Set(allColumnElements.map(el => el.dataset.columnId!))
 
     allColumnIds.forEach(id => {
-      console.log(id, minWidthFormat, id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth)
       this.columns.push(new Column(
         id,
         allColumnElements.filter(el => el.dataset.columnId == id),
@@ -107,9 +106,11 @@ export class Columns {
 
   private async prepare() {
     const columnsChanged = this.trackColumnsChange()
+    this.columns.forEach(col => col.getWidth())
     this.calculateTotalWidth()
     await Promise.all(
       this.columns.map(col => new Promise<void>(resolve => {
+        console.log(col.id, col.minWidth, this.totalWidth)
         col.elements.forEach(el => {
           el.style.boxSizing = 'border-box'
           el.style.overflow = 'hidden'
