@@ -7,7 +7,7 @@ const getCloneRow = () => lastRow.cloneNode(true)
 const columns = new Columns(
   document.querySelector('#wrapper')!,
   {
-    defaultMinWidth: 70,
+    defaultMinWidth: .15,
     minWidthByColumnId: {
       name: .2
     },

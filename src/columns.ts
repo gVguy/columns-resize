@@ -28,9 +28,12 @@ export class Columns {
 
     const {
       minWidthByColumnId = {},
-      defaultMinWidth = 50,
+      minWidthFormat = 'px',
       autoResizeHandles = false,
-      minWidthFormat = 'px'
+    } = this.opts || {}
+
+    const {
+      defaultMinWidth = minWidthFormat == 'px' ? 50 : .1
     } = this.opts || {}
 
     this.columns = []
@@ -41,13 +44,14 @@ export class Columns {
     const allColumnIds = new Set(allColumnElements.map(el => el.dataset.columnId!))
 
     allColumnIds.forEach(id => {
+      console.log(id, minWidthFormat, id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth)
       this.columns.push(new Column(
         id,
         allColumnElements.filter(el => el.dataset.columnId == id),
         this,
         id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth,
         autoResizeHandles,
-        id in minWidthByColumnId ? minWidthFormat : 'px'
+        minWidthFormat
       ))
     })
 

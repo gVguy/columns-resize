@@ -98,6 +98,7 @@ const columns = new ColumnsResize(rootElement, {
   minWidthByColumnId: {
     'name': 100
   },
+  minWidthFormat: 'px',
   autoResizeHandles: true,
   onResizeStart: () => console.log('resize start'),
   onResizeEnd: () => console.log('resize end'),
@@ -122,6 +123,16 @@ type: `{ [key: string]: number }`
 default: `{}`
 
 Min widths for specific columns
+
+### options.minWidthFormat
+
+type: `'px'|'0-1'`
+
+default: `'px'`
+
+Specifies the format of [`minWidthByColumnId`](#optionsminwidthbycolumnid).
+If set to `'px'`, min width values are treated as pixel sizes.
+If set to `'0-1'`, a value from `0` to `1` is expected and min widths are calculated based on total columns width.
 
 ### options.autoResizeHandles
 
