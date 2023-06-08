@@ -9,8 +9,9 @@ const columns = new Columns(
   {
     defaultMinWidth: 70,
     minWidthByColumnId: {
-      name: 50
+      name: .2
     },
+    minWidthFormat: '0-1',
     autoResizeHandles: true,
     onResizeStart() {
       document.body.classList.add('grabbing')

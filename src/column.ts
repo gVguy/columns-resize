@@ -1,9 +1,9 @@
-import type { Columns } from './columns'
+import type { Columns, MinWidthFormat } from './columns'
 import * as ClassNames from './class-names'
 
 export class Column {
   elements: HTMLElement[]
-  minWidth: number
+  minWidthRaw: number
   width: number = 0
   idx: number
   columns: Columns
@@ -11,20 +11,23 @@ export class Column {
   id: string
   autoResizeHandles: boolean
   isHover = false
+  minWidthFormat: MinWidthFormat
   
   constructor(
     id: string,
     elements: HTMLElement[],
     columns: Columns,
-    minWidth = 50,
-    autoResizeHandles: boolean
+    minWidth: number,
+    autoResizeHandles: boolean,
+    minWidthFormat: MinWidthFormat
   ) {
     this.id = id
     this.elements = elements
     this.columns = columns
     this.idx = columns.columns.length
-    this.minWidth = minWidth
+    this.minWidthRaw = minWidth
     this.autoResizeHandles = autoResizeHandles
+    this.minWidthFormat = minWidthFormat
   }
 
   get next() {
@@ -32,6 +35,13 @@ export class Column {
   }
   get previous() {
     return this.columns.columns[this.idx - 1]
+  }
+  get minWidth() {
+    if (this.minWidthFormat == 'px') {
+      return this.minWidthRaw
+    } else {
+      return this.minWidthRaw * this.columns.totalWidth
+    }
   }
   get canShrink() {
     return this.width > this.minWidth

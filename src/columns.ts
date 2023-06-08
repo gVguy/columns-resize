@@ -3,6 +3,7 @@ import * as ClassNames from './class-names'
 
 export class Columns {
   columns: Column[] = []
+  totalWidth: number = 0
   private rootElement: HTMLElement
   private opts?: ColumnsOpts
   private targetColumn?: Column
@@ -28,7 +29,8 @@ export class Columns {
     const {
       minWidthByColumnId = {},
       defaultMinWidth = 50,
-      autoResizeHandles = false
+      autoResizeHandles = false,
+      minWidthFormat = 'px'
     } = this.opts || {}
 
     this.columns = []
@@ -44,7 +46,8 @@ export class Columns {
         allColumnElements.filter(el => el.dataset.columnId == id),
         this,
         id in minWidthByColumnId ? minWidthByColumnId[id] : defaultMinWidth,
-        autoResizeHandles
+        autoResizeHandles,
+        id in minWidthByColumnId ? minWidthFormat : 'px'
       ))
     })
 
@@ -94,8 +97,13 @@ export class Columns {
     })
   }
 
+  private calculateTotalWidth() {
+    this.totalWidth = this.columns.reduce((a,b) => a + b.width, 0)
+  }
+
   private async prepare() {
     const columnsChanged = this.trackColumnsChange()
+    this.calculateTotalWidth()
     await Promise.all(
       this.columns.map(col => new Promise<void>(resolve => {
         col.elements.forEach(el => {
@@ -162,6 +170,7 @@ export class Columns {
       col.getWidth()
       col.setWidthDiff(0)
     })
+    this.calculateTotalWidth()
     this.lastResizeEventX = e.clientX
     this.targetColumn = (e.target as HandleEl).targetColumn
     document.addEventListener('pointerup', this.onPointerUp, { once: true })
@@ -233,11 +242,14 @@ type ColumnsOpts = {
   defaultMinWidth?: number,
   minWidthByColumnId?: {
     [key: string]: number
-  }
+  },
+  minWidthFormat?: MinWidthFormat
   autoResizeHandles?: boolean
   onResizeStart?: () => void
   onResizeEnd?: () => void
   logs?: boolean
 }
+
+export type MinWidthFormat = 'px'|'0-1'
 
 type HandleEl = HTMLElement & { targetColumn: Column }
